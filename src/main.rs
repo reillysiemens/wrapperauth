@@ -40,16 +40,22 @@ fn main() {
 
 fn translate(args: Args) -> Vec<String> {
     match args {
-        Args::Auth(target) => vec![
-            String::from("--client"),
-            target.client,
-            String::from("--tenant"),
-            target.tenant,
-            String::from("--resource"),
-            String::from(" "),
-            String::from("--scope"),
-            target.scopes[0].clone(),
-        ],
+        Args::Auth(target) => {
+            let mut args = vec![
+                String::from("--client"),
+                target.client,
+                String::from("--tenant"),
+                target.tenant,
+                String::from("--resource"),
+                String::from(" "),
+            ];
+            for scope in target.scopes {
+                args.push(String::from("--scope"));
+                args.push(scope);
+            }
+
+            args
+        }
         Args::Clear(_) => todo!(),
     }
 }
@@ -57,6 +63,7 @@ fn translate(args: Args) -> Vec<String> {
 #[cfg(test)]
 mod tests {
     use super::{translate, Args, Target};
+    use pretty_assertions::assert_eq;
 
     #[test]
     fn auth_command() {
@@ -74,6 +81,29 @@ mod tests {
             " ",
             "--scope",
             "baz",
+        ];
+        let subject = translate(args);
+        assert_eq!(subject, expected);
+    }
+
+    #[test]
+    fn auth_command_multiple_scopes() {
+        let args = Args::Auth(Target {
+            client: String::from("foo"),
+            tenant: String::from("bar"),
+            scopes: vec![String::from("baz"), String::from("quux")],
+        });
+        let expected = [
+            "--client",
+            "foo",
+            "--tenant",
+            "bar",
+            "--resource",
+            " ",
+            "--scope",
+            "baz",
+            "--scope",
+            "quux",
         ];
         let subject = translate(args);
         assert_eq!(subject, expected);
