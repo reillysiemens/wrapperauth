@@ -56,7 +56,24 @@ fn translate(args: Args) -> Vec<String> {
 
             args
         }
-        Args::Clear(_) => todo!(),
+        Args::Clear(target) => {
+            let mut args = vec![
+                String::from("--client"),
+                target.client,
+                String::from("--tenant"),
+                target.tenant,
+                String::from("--resource"),
+                String::from(" "),
+            ];
+            for scope in target.scopes {
+                args.push(String::from("--scope"));
+                args.push(scope);
+            }
+
+            args.push(String::from("--clear"));
+
+            args
+        }
     }
 }
 
