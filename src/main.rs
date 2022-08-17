@@ -17,7 +17,17 @@ enum Args {
         scopes: Vec<String>,
     },
     /// Clear a token.
-    Clear,
+    Clear {
+        /// Client ID.
+        #[clap(long)]
+        client: String,
+        /// Tenant ID.
+        #[clap(long)]
+        tenant: String,
+        /// Requested scopes.
+        #[clap(long, required = true)]
+        scopes: Vec<String>,
+    },
 }
 
 fn main() {
@@ -27,6 +37,10 @@ fn main() {
             tenant,
             scopes,
         } => println!("Acquired a token for {client} in {tenant} with {scopes:?}."),
-        Args::Clear => println!("Cleared a token."),
+        Args::Clear {
+            client,
+            tenant,
+            scopes,
+        } => println!("Cleared a token for {client} in {tenant} with {scopes:?}."),
     }
 }
