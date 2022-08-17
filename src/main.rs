@@ -1,3 +1,5 @@
+use std::process::Command;
+
 use clap::Parser;
 
 #[derive(Parser)]
@@ -44,17 +46,12 @@ impl From<Target> for Vec<String> {
 }
 
 fn main() {
-    match Args::parse() {
-        Args::Auth(Target {
-            client,
-            tenant,
-            scopes,
-        }) => println!("Acquired a token for {client} in {tenant} with {scopes:?}."),
-        Args::Clear(Target {
-            client,
-            tenant,
-            scopes,
-        }) => println!("Cleared a token for {client} in {tenant} with {scopes:?}."),
+    let args = Args::parse();
+    let args = translate(args);
+    let result = Command::new("azureauth").args(args).spawn();
+    match result {
+        Ok(_) => println!("Spawned AzureAuth process."),
+        Err(err) => eprintln!("Failed to spawn AzureAuth process: {err}"),
     }
 }
 
