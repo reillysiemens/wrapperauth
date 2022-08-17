@@ -1,5 +1,6 @@
 use clap::Parser;
 
+/// Do the good auth.
 #[derive(Parser)]
 struct Args;
 
