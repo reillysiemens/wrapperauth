@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# A tiny helper script for executing the target command on platforms without a
+# real AzureAuth installation. To install visit https://aka.ms/azureauth.
+#
+# Add this to your $PATH with
+#
+#   export PATH="$(readlink -f ./bin):${PATH}"
+#
+# and then call `cargo run` to manually test commands work.
+echo $0 $@
