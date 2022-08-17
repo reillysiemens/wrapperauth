@@ -37,3 +37,33 @@ fn main() {
         }) => println!("Cleared a token for {client} in {tenant} with {scopes:?}."),
     }
 }
+
+fn translate(args: Args) -> Vec<String> {
+    todo!()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{translate, Args, Target};
+
+    #[test]
+    fn auth_command() {
+        let args = Args::Auth(Target {
+            client: String::from("foo"),
+            tenant: String::from("bar"),
+            scopes: vec![String::from("baz")],
+        });
+        let expected = [
+            "--client",
+            "foo",
+            "--tenant",
+            "bar",
+            "--resource",
+            " ",
+            "--scope",
+            "baz",
+        ];
+        let subject = translate(args);
+        assert_eq!(subject, expected);
+    }
+}
