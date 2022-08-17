@@ -100,4 +100,17 @@ mod tests {
 
         assert_eq!(subject, expected);
     }
+
+    #[test]
+    fn clear_command() {
+        let args = Args::Clear(Target {
+            client: String::from("foo"),
+            tenant: String::from("bar"),
+            scopes: vec![String::from("baz")],
+        });
+        let expected = [&EXPECTED[..], &["--clear"]].concat();
+        let subject = translate(args);
+
+        assert_eq!(subject, expected);
+    }
 }
