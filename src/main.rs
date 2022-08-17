@@ -3,8 +3,16 @@ use clap::Parser;
 /// Do the good auth.
 #[derive(Parser)]
 #[clap(version)]
-struct Args;
+enum Args {
+    /// Acquire a token.
+    Auth,
+    /// Clear a token.
+    Clear,
+}
 
 fn main() {
-    Args::parse();
+    match Args::parse() {
+        Args::Auth => println!("Acquired a token."),
+        Args::Clear => println!("Cleared a token."),
+    }
 }
