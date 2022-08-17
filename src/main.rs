@@ -65,6 +65,17 @@ mod tests {
     use super::{translate, Args, Target};
     use pretty_assertions::assert_eq;
 
+    const EXPECTED: [&str; 8] = [
+        "--client",
+        "foo",
+        "--tenant",
+        "bar",
+        "--resource",
+        " ",
+        "--scope",
+        "baz",
+    ];
+
     #[test]
     fn auth_command() {
         let args = Args::Auth(Target {
@@ -72,18 +83,9 @@ mod tests {
             tenant: String::from("bar"),
             scopes: vec![String::from("baz")],
         });
-        let expected = [
-            "--client",
-            "foo",
-            "--tenant",
-            "bar",
-            "--resource",
-            " ",
-            "--scope",
-            "baz",
-        ];
         let subject = translate(args);
-        assert_eq!(subject, expected);
+
+        assert_eq!(subject, EXPECTED);
     }
 
     #[test]
@@ -93,19 +95,9 @@ mod tests {
             tenant: String::from("bar"),
             scopes: vec![String::from("baz"), String::from("quux")],
         });
-        let expected = [
-            "--client",
-            "foo",
-            "--tenant",
-            "bar",
-            "--resource",
-            " ",
-            "--scope",
-            "baz",
-            "--scope",
-            "quux",
-        ];
+        let expected = [&EXPECTED[..], &["--scope", "quux"]].concat();
         let subject = translate(args);
+
         assert_eq!(subject, expected);
     }
 }
