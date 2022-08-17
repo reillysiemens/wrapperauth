@@ -39,7 +39,19 @@ fn main() {
 }
 
 fn translate(args: Args) -> Vec<String> {
-    todo!()
+    match args {
+        Args::Auth(target) => vec![
+            String::from("--client"),
+            target.client,
+            String::from("--tenant"),
+            target.tenant,
+            String::from("--resource"),
+            String::from(" "),
+            String::from("--scope"),
+            target.scopes[0].clone(),
+        ],
+        Args::Clear(_) => todo!(),
+    }
 }
 
 #[cfg(test)]
