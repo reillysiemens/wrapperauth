@@ -23,6 +23,26 @@ enum Args {
     Clear(Target),
 }
 
+impl From<Target> for Vec<String> {
+    fn from(target: Target) -> Self {
+        let mut args = vec![
+            String::from("--client"),
+            target.client,
+            String::from("--tenant"),
+            target.tenant,
+            String::from("--resource"),
+            String::from(" "),
+        ];
+
+        for scope in target.scopes {
+            args.push(String::from("--scope"));
+            args.push(scope);
+        }
+
+        args
+    }
+}
+
 fn main() {
     match Args::parse() {
         Args::Auth(Target {
@@ -40,22 +60,7 @@ fn main() {
 
 fn translate(args: Args) -> Vec<String> {
     match args {
-        Args::Auth(target) => {
-            let mut args = vec![
-                String::from("--client"),
-                target.client,
-                String::from("--tenant"),
-                target.tenant,
-                String::from("--resource"),
-                String::from(" "),
-            ];
-            for scope in target.scopes {
-                args.push(String::from("--scope"));
-                args.push(scope);
-            }
-
-            args
-        }
+        Args::Auth(target) => Vec::from(target),
         Args::Clear(target) => {
             let mut args = vec![
                 String::from("--client"),
